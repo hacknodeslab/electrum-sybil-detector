@@ -1,9 +1,8 @@
 # Electrum Server Sybil Detector
 
-## Module: `electrum-sybil-detector`
-
-**Parent project:** bitcoin-node-scanner
-**Status:** Draft
+**Project:** `electrum-sybil-detector`
+**Lab:** HackNodes Lab
+**Status:** Draft (research output — tool → dataset → paper)
 **Author:** ifuensan
 **Date:** 2026-04-10
 
@@ -14,6 +13,47 @@ Surveillance companies (e.g. Chainalysis) likely operate multiple public Electru
 ## Objective
 
 Build a long-running data collection and analysis pipeline that connects to all known public Electrum servers, records behavioral fingerprints over time, and identifies clusters of servers likely operated by the same entity — especially surveillance operators.
+
+## Target server implementations
+
+Public-facing Electrum server implementations fingerprinted by the detector:
+
+<table>
+  <tr>
+    <td align="center" width="20%">
+      <a href="https://github.com/kyuupichan/electrumx">
+        <b>ElectrumX</b>
+      </a><br>
+      <sub>Python · MIT</sub>
+    </td>
+    <td align="center" width="20%">
+      <a href="https://github.com/romanz/electrs">
+        <img src="docs/assets/logos/electrs.svg" height="48" alt="electrs logo"><br>
+        <b>electrs</b>
+      </a><br>
+      <sub>Rust · MIT</sub>
+    </td>
+    <td align="center" width="20%">
+      <a href="https://github.com/Blockstream/electrs">
+        <b>Blockstream electrs</b>
+      </a><br>
+      <sub>Rust · MIT · Esplora backend</sub>
+    </td>
+    <td align="center" width="20%">
+      <a href="https://github.com/cculianu/Fulcrum">
+        <img src="docs/assets/logos/fulcrum.png" height="48" alt="Fulcrum logo"><br>
+        <b>Fulcrum</b>
+      </a><br>
+      <sub>C++ · GPLv3</sub>
+    </td>
+    <td align="center" width="20%">
+      <a href="https://github.com/chris-belcher/electrum-personal-server">
+        <b>Electrum Personal Server</b>
+      </a><br>
+      <sub>Python · MIT</sub>
+    </td>
+  </tr>
+</table>
 
 ## Documentation
 
