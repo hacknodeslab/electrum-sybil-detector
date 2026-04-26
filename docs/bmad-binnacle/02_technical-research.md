@@ -125,10 +125,11 @@ Executive summary + TOC + narrativa + síntesis temática por seis temas + recom
    - Detection heuristics by class (Step 5 §3) → requirements funcionales.
    - Research frontiers (Step 6) → roadmap post-M3.
    - Empirical null-results de Shodan → justifican la decisión de activo-crawl-only.
-4. **Validación pendiente fuera del informe:**
-   - Fee-histogram determinism (highest priority — load-bearing para Q2 methodology del PRFAQ). No cubierto a propósito: es deep dive, no broad survey.
-   - Python asyncio timing resolution adequacy.
-   - Real network size desde snowball (el informe establece el lower bound: bootstrap=130, 1209k=506, true size >).
+4. **Validación pendiente fuera del informe** → continuada en [`03_phase1-validations.md`](./03_phase1-validations.md):
+   - ~~Fee-histogram determinism~~ **resuelto 2026-04-25** por lectura de código (spesmilo/electrumx). Verdict: fuertemente correlacionado, no bit-idéntico por construcción. Discriminador es Wasserstein, no igualdad. Detalle en bitácora 03.
+   - Python asyncio timing resolution adequacy — pendiente (próxima en cola).
+   - Real network size desde snowball — pendiente (próxima en cola).
+   - Testbed empírico (1 Core + 5 frontends) — abierto como tarea separada para medir magnitud del drift; no decisión binaria.
 5. **Si algo se descalifica:** `bmad-correct-course` antes del PRD.
 
 ### Lección meta
@@ -246,10 +247,11 @@ Executive summary + TOC + narrative + thematic synthesis across six themes + per
    - Detection heuristics by class (Step 5 §3) → functional requirements.
    - Research frontiers (Step 6) → post-M3 roadmap.
    - Shodan empirical null-results → justify the decision for active-crawl-only.
-4. **Validation pending outside this report:**
-   - Fee-histogram determinism (highest priority — load-bearing for PRFAQ Q2 methodology). Intentionally not covered here: deep dive, not broad survey.
-   - Python asyncio timing resolution adequacy.
-   - Real network size from snowball (the report establishes the lower bound: bootstrap=130, 1209k=506, true size >).
+4. **Validation pending outside this report** → continued in [`03_phase1-validations.md`](./03_phase1-validations.md):
+   - ~~Fee-histogram determinism~~ **resolved 2026-04-25** via code reading (spesmilo/electrumx). Verdict: strongly correlated, not bit-identical by construction. Discriminator is Wasserstein, not equality. Detail in binnacle 03.
+   - Python asyncio timing resolution adequacy — pending (next in queue).
+   - Real network size from snowball — pending (next in queue).
+   - Empirical testbed (1 Core + 5 frontends) — opened as a separate task to measure drift magnitude; not a binary decision.
 5. **If something gets disconfirmed:** `bmad-correct-course` before the PRD.
 
 ### Meta lesson

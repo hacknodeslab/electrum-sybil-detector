@@ -35,6 +35,8 @@ secrets/
 logs/
 tmp/
 .tmp/
+# Evidence artifacts under experiments/ ship with their scripts.
+!experiments/**/*.log
 
 # ---------------------------------------------------------------------------
 # Python
