@@ -1,0 +1,363 @@
+# Launch-Blocker Tracker · electrum-sybil-detector
+#
+# Single source of truth for the 26-item launch-blocker checklist (PRD §L501–L532).
+# Created 2026-04-27, anticipating Story 7.3 (which will codify the audit CLI that
+# consumes this file). Story 4.7 Verification 7 reads this file to gate the M3 launch.
+#
+# STATUS VALUES:
+#   cleared          item resolved; cleared_by + cleared_at populated
+#   pending          item open; awaiting work
+#   blocked          item awaiting external dependency or decision
+#   superseded       item removed from scope (rationale in notes)
+#
+# OWNER VALUES:
+#   ifuensan         maintainer (real-world conversations, paper writing, fact-checks, ops)
+#   amelia           BMad dev agent (code stories close LBs as side-effect)
+#   amelia+ifuensan  paired work (code + ops/coordination)
+#
+# PRIORITY VALUES:
+#   priority_1       priority-1 cluster member (#11 → #2 → #8 → #1 → #9)
+#   priority_2       paper / publication / archival prerequisites
+#   priority_3       fact-checks, soak verifications
+
+generated: 2026-04-27
+last_updated: 2026-04-27
+project: electrum-sybil-detector
+
+launch_blockers:
+
+  - id: 1
+    title: Verify bitcoin-data/stale-blocks cadence claim (3–8/month)
+    status: pending
+    priority: priority_1
+    priority_1_cluster_member: true
+    owner: ifuensan
+    cleared_by: null
+    cleared_at: null
+    notes: |
+      Cadence numbers cited in PRD L505 (13 events in first 3.5 months of 2026 with
+      consecutive-height pairs) suggest verification done during Phase 1 technical
+      research, but no explicit binnacle entry confirms. Story 3.3's AC re-verifies
+      at production scale. Could be cleared earlier by quick re-check of stale-blocks
+      dataset.
+
+  - id: 2
+    title: Fee-histogram behavior — binary question + empirical drift-magnitude testbed
+    status: pending
+    priority: priority_1
+    priority_1_cluster_member: true
+    owner: amelia+ifuensan
+    cleared_by: null
+    cleared_at: null
+    notes: |
+      Binary question CLOSED 2026-04-25 by code reading
+      (spesmilo/electrumx/src/electrumx/server/mempool.py:154-209): strongly correlated,
+      not bit-identical, by construction. Detail in docs/bmad-binnacle/03_phase1-validations.md.
+      PENDING: empirical drift-magnitude testbed against the 5-frontend matrix
+      (Story 3.1). Remaining work is operational (docker-compose + Bitcoin Core).
+
+  - id: 3
+    title: Verify 500 MB/month compressed signal volume at full network scale
+    status: pending
+    priority: priority_3
+    priority_1_cluster_member: false
+    owner: amelia
+    cleared_by: null
+    cleared_at: null
+    notes: Closed by Story 2.5 soak (NFR11 verification at full scale).
+
+  - id: 4
+    title: Verify $5/month VPS claim against planned Rust daemon CPU profile
+    status: pending
+    priority: priority_3
+    priority_1_cluster_member: false
+    owner: ifuensan
+    cleared_by: null
+    cleared_at: null
+    notes: |
+      Architecture decided AWS EC2 t4g.small (~$12.25/mo), revising the original
+      $5/mo claim. Cost envelope NFR12 ≤$500/year still honored. Story 1.10's
+      Terraform outputs verify monthly cost projection.
+
+  - id: 5
+    title: Verify "under an hour" Docker install claim when first-run guide exists
+    status: pending
+    priority: priority_2
+    priority_1_cluster_member: false
+    owner: ifuensan
+    cleared_by: null
+    cleared_at: null
+    notes: Closed by Story 6.1 — empirical walkthrough in docs/bmad-binnacle/17_lb5_first_run_es_walkthrough.md.
+
+  - id: 6
+    title: Verify BlueWallet default-server publicly-reachable claim
+    status: pending
+    priority: priority_3
+    priority_1_cluster_member: false
+    owner: ifuensan
+    cleared_by: null
+    cleared_at: null
+    notes: PRFAQ example check. ~10 min task.
+
+  - id: 7
+    title: Verify b10c issue #11 URL, status still "Todo", title match
+    status: pending
+    priority: priority_3
+    priority_1_cluster_member: false
+    owner: ifuensan
+    cleared_by: null
+    cleared_at: null
+    notes: Quick fact-check. Re-verify pre-launch (Story 4.7 V8 paper-section lint).
+
+  - id: 8
+    title: Verify b10c fork-observer Electrum-support claim
+    status: pending
+    priority: priority_1
+    priority_1_cluster_member: true
+    owner: ifuensan
+    cleared_by: null
+    cleared_at: null
+    notes: |
+      Architecture treats fork-observer as read-only HTTP/JSON consumer (AR27).
+      Verification: HTTP request to a fork-observer instance + check Electrum
+      server entries. Closed implicitly by Story 3.3 cross-check.
+
+  - id: 9
+    title: Verify methodology-ancestor citations (CoinScope, TxProbe, Grundmann, Node-Probe)
+    status: pending
+    priority: priority_1
+    priority_1_cluster_member: true
+    owner: ifuensan
+    cleared_by: null
+    cleared_at: null
+    notes: |
+      Author + venue verification per ancestor. ~1-2h each. Required for paper
+      §Related Work (Story 4.7 V8). Can be done at any time pre-launch.
+
+  - id: 10
+    title: Locate CoinDesk 2021 article on Chainalysis / walletexplorer.com
+    status: pending
+    priority: priority_2
+    priority_1_cluster_member: false
+    owner: ifuensan
+    cleared_by: null
+    cleared_at: null
+    notes: |
+      URL + claims verification. Cited-only intent attribution per PRD §Output
+      Guardrails. Required for paper introduction. ~30 min task.
+
+  - id: 11
+    title: Pre-launch — open discussion with b10c on bitcoin-data dataset contribution
+    status: pending
+    priority: priority_1
+    priority_1_cluster_member: true
+    owner: ifuensan
+    cleared_by: null
+    cleared_at: null
+    notes: |
+      ASYNCHRONOUS WORK WITH 4-6 WEEK LEAD TIME. Highest priority non-code item.
+      Hard prerequisite for Story 4.4 (bitcoin-data PR submission). Conversation
+      covers (a) framing, (b) bitcoin-data contribution conventions, (c) Path 2
+      handoff optionality (IQ3 differentiation + IQ9 Path 2 precondition).
+      Recommended: open issue or send first email THIS WEEK so the conversation
+      is in motion when Epic 4 lands.
+      Track: docs/bmad-binnacle/13_lb11_b10c_socialization.md (to be created on
+      first contact).
+
+  - id: 12
+    title: Pre-launch — create Zenodo record, reserve DOI, cite in paper abstract
+    status: pending
+    priority: priority_2
+    priority_1_cluster_member: false
+    owner: ifuensan
+    cleared_by: null
+    cleared_at: null
+    notes: |
+      Zenodo account creation + sandbox testing per Story 4.5. Production DOI
+      reservation pre-launch. Can run in parallel with Epic 3.
+
+  - id: 13
+    title: Pre-launch — upload arXiv preprint citing Zenodo DOI
+    status: pending
+    priority: priority_2
+    priority_1_cluster_member: false
+    owner: ifuensan
+    cleared_by: null
+    cleared_at: null
+    notes: |
+      Manual upload at M3 launch (no API per AR33c). Story 4.6 produces the
+      validated tarball + runbook. arXiv account creation can happen anytime
+      pre-launch.
+
+  - id: 14
+    title: Verify AS24940 (Hetzner) as style-rule example remains representative
+    status: pending
+    priority: priority_3
+    priority_1_cluster_member: false
+    owner: ifuensan
+    cleared_by: null
+    cleared_at: null
+    notes: Quick check pre-launch. Swap example if Cluster 7 misleading. ~30 min.
+
+  - id: 15
+    title: Verify Python asyncio timing resolution adequate
+    status: cleared
+    priority: priority_3
+    priority_1_cluster_member: false
+    owner: ifuensan
+    cleared_by: docs/bmad-binnacle/03_phase1-validations.md
+    cleared_at: 2026-04-25
+    notes: |
+      CLEARED 2026-04-25. Measured p99 fanout-broadcast spread = 587 µs at N=100,
+      1.71 ms at N=200 (both idle); ~3-8x under the 5 ms decision threshold.
+      Methodology signal floor (hundreds of ms inter-server in fork races)
+      dominates collector jitter by orders of magnitude.
+
+  - id: 16
+    title: Verify 1209k.com uptime claim against historical data
+    status: pending
+    priority: priority_3
+    priority_1_cluster_member: false
+    owner: ifuensan
+    cleared_by: null
+    cleared_at: null
+    notes: |
+      DEFERRED TO M1 by Phase-1 scope decision. Phase-1 V3 measured the network
+      independently and obtained ≥344 dual-stack-reachable mainnet servers vs.
+      1209k's headline of 506. Cross-validation rolls into M1 baseline calibration
+      (Story 2.1 snowball weighting).
+
+  - id: 17
+    title: Clarify and fact-check I2P "reveals initiator's address" claim
+    status: pending
+    priority: priority_3
+    priority_1_cluster_member: false
+    owner: ifuensan
+    cleared_by: null
+    cleared_at: null
+    notes: |
+      Re-phrase as "persistent destination identifiers enable long-term linkability"
+      for technical accuracy. ~30 min task.
+
+  - id: 18
+    title: Re-verify IQ3's 9-month b10c-Todo dwell time at actual launch date
+    status: pending
+    priority: priority_3
+    priority_1_cluster_member: false
+    owner: ifuensan
+    cleared_by: null
+    cleared_at: null
+    notes: Update phrasing if launch slips. Done at launch moment, ~5 min.
+
+  - id: 19
+    title: Schedule b10c socialization conversation (framing + bitcoin-data contribution + Path 2)
+    status: pending
+    priority: priority_1
+    priority_1_cluster_member: false
+    owner: ifuensan
+    cleared_by: null
+    cleared_at: null
+    notes: |
+      Same content as LB#11. Tracked as separate item per PRFAQ. Cleared together
+      with LB#11.
+
+  - id: 20
+    title: Verify FC's recent acceptance patterns for methodology-first measurement papers
+    status: pending
+    priority: priority_3
+    priority_1_cluster_member: false
+    owner: ifuensan
+    cleared_by: null
+    cleared_at: null
+    notes: |
+      Biryukov / Meiklejohn / Bonneau lineage holds through 2024-2026. Browse FC
+      proceedings 2024-2025. ~1h task. Pre-launch venue selection.
+
+  - id: 21
+    title: Re-evaluate PETS 2023-2025 editorial mix
+    status: pending
+    priority: priority_3
+    priority_1_cluster_member: false
+    owner: ifuensan
+    cleared_by: null
+    cleared_at: null
+    notes: |
+      Reconsider primary/backup ordering if PETS still actively publishing Bitcoin
+      work. ~1h task.
+
+  - id: 22
+    title: Paper measurement-ethics section (rate-limiting, disclosure, IRB-equivalent)
+    status: pending
+    priority: priority_2
+    priority_1_cluster_member: false
+    owner: ifuensan
+    cleared_by: null
+    cleared_at: null
+    notes: |
+      OpenSats / PETS reviewer expectations. Multi-day writing task. Can draft
+      in parallel with Epic 3. Required for Story 4.7 V8 paper-section lint.
+
+  - id: 23
+    title: Paper threat model + known evasion paths section
+    status: pending
+    priority: priority_2
+    priority_1_cluster_member: false
+    owner: ifuensan
+    cleared_by: null
+    cleared_at: null
+    notes: |
+      Per IQ7. Multi-day writing task. Can draft in parallel with Epic 3.
+      Required for Story 4.7 V8.
+
+  - id: 24
+    title: Output Guardrails phrasing-bank audit complete across all artifacts
+    status: pending
+    priority: priority_2
+    priority_1_cluster_member: false
+    owner: amelia
+    cleared_by: null
+    cleared_at: null
+    notes: |
+      Closed by Story 5.2 (CI gate). Audit is release-blocking; release blocked
+      on completion.
+
+  - id: 25
+    title: Reproducibility self-test green at M3 dataset snapshot
+    status: pending
+    priority: priority_2
+    priority_1_cluster_member: false
+    owner: amelia
+    cleared_by: null
+    cleared_at: null
+    notes: |
+      Closed by Story 4.3 (full bit-identical contract at M3 dataset scale).
+
+  - id: 26
+    title: VPS dual-stack verified at deploy host
+    status: pending
+    priority: priority_2
+    priority_1_cluster_member: false
+    owner: amelia+ifuensan
+    cleared_by: null
+    cleared_at: null
+    notes: |
+      Added 2026-04-26 after Phase-1 V3 evidence (~28% network IPv6-only).
+      Operational gate verifying collector reaches ≥3 IPv6-only Electrum servers
+      from deploy host. Closed by Story 1.10 (verify_dual_stack.sh).
+
+# SUMMARY (2026-04-27)
+# ====================
+# Cleared:    1  (LB#15)
+# Pending:   25
+# Blocked:    0
+# Superseded: 0
+#
+# Priority-1 cluster (5 items): #11 → #2 → #8 → #1 → #9
+# All currently pending (LB#2 partial via code-reading closeout).
+#
+# Owner breakdown:
+#   ifuensan:        17 (paper, fact-checks, ops, coordination)
+#   amelia:           4 (Stories 5.2, 4.3, 1.10 implementation, etc.)
+#   amelia+ifuensan:  3 (LB#2 testbed, LB#26 deploy verification, etc.)
+#   already cleared:  1 (LB#15)
+#   nullable owner: future re-evaluations (LB#7, LB#18, LB#20, LB#21)

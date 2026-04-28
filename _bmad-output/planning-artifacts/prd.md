@@ -17,6 +17,13 @@ stepsCompleted:
   - step-09-functional
   - step-10-nonfunctional
   - step-11-polish
+  - step-e-01-discovery
+  - step-e-02-review
+  - step-e-03-edit
+lastEdited: 2026-04-26
+editHistory:
+  - date: 2026-04-26
+    changes: 'Phase-1 closeout validations integrated (commit 13bec1f). Block 1 — fee-histogram harness reframed from identity test to Wasserstein-distance calibration (L383(i), L470, FR19, FR24, LB#2). Block 2 — asyncio timing LB#15 cleared with empirical numbers; NFR2 tightened. Block 3 — IPv4+IPv6 dual-stack outbound made an explicit M0 requirement (Discovery module L447, M1→M2 gate L463, NFR10, cost envelope L478, +new LB#26).'
 visionLocks:
   bilingualReach: asymmetric-operational-principle
   twoPapersPlan: launch-first-program-committed-hybrid
@@ -59,12 +66,16 @@ inputDocuments:
   - docs/references.md
   - docs/bmad-binnacle/01_prfaq-challenge.md
   - docs/bmad-binnacle/02_technical-research.md
+  - docs/bmad-binnacle/03_phase1-validations.md
+  - experiments/asyncio-timing-benchmark/
+  - experiments/snowball-network-size/
 documentCounts:
   briefs: 1
   research: 2
   prfaq: 2
   projectDocs: 4
-  bmadBinnacle: 2
+  bmadBinnacle: 3
+  experiments: 2
 projectClassification: greenfield-with-rich-planning-artifacts
 ---
 
@@ -380,7 +391,7 @@ Risks specifically tied to *novelty status* (not duplicating Domain Risk Mitigat
 
 ### Publication Requirements
 
-**Paper artifact deliverable contract.** The M3 methodology paper must include the following sections, each with a definition-of-done before submission: (a) abstract citing Zenodo DOI; (b) introduction including provenance citation (b10c issue #11) and CoinDesk 2021 Chainalysis precedent; (c) threat model (launch-blocker #23); (d) measurement-ethics statement (launch-blocker #22); (e) related work covering CoinScope, TxProbe, Grundmann et al., Node-Probe, Electrohunt 2019, with verified author attribution (launch-blocker #9); (f) methodology, including signal hierarchy, multi-signal threshold, vantage-robustness derivation, baseline computation; (g) results, including either positive-finding clusters (scenario 1) or upper-bound + null distribution (scenarios 2 and 3); (h) known evasion paths (per Innovation Risk Mitigation); (i) limitations (single vantage, M3 scale, fee-histogram tolerance if applicable); (j) reproducibility statement linking to the dataset DOI and self-test invocation.
+**Paper artifact deliverable contract.** The M3 methodology paper must include the following sections, each with a definition-of-done before submission: (a) abstract citing Zenodo DOI; (b) introduction including provenance citation (b10c issue #11) and CoinDesk 2021 Chainalysis precedent; (c) threat model (launch-blocker #23); (d) measurement-ethics statement (launch-blocker #22); (e) related work covering CoinScope, TxProbe, Grundmann et al., Node-Probe, Electrohunt 2019, with verified author attribution (launch-blocker #9); (f) methodology, including signal hierarchy, multi-signal threshold, vantage-robustness derivation, baseline computation; (g) results, including either positive-finding clusters (scenario 1) or upper-bound + null distribution (scenarios 2 and 3); (h) known evasion paths (per Innovation Risk Mitigation); (i) limitations (single vantage, M3 scale, documented Wasserstein tolerance band on fee-histogram cluster membership); (j) reproducibility statement linking to the dataset DOI and self-test invocation.
 
 **Evidentiary standards (multi-signal threshold).** Every published cluster claim exceeds the threshold on ≥2 backend-state signals (fork-race timing variance, fee-histogram correlation, synchronized downtime) and ≥1 frontend-config signal (banner, version, ASN, donation address). Single-signal matches are listed in the dataset as candidates for reproduction, never as findings. Confidence intervals on every cluster claim. Multiple-testing correction across the fork-race-event population. Power analysis disclosed for the M3 dataset window. (Carve-out: `rigor.statistical_methodology`.)
 
@@ -444,7 +455,7 @@ Code hash + raw-input fingerprint → bit-identical derived dataset, OR document
 
 **Module structure.**
 
-- *Discovery module.* Seed-list ingestion (1209k.com/bitcoin-eye + Electrum wallet hardcoded defaults); snowball expansion via `server.peers.subscribe`; ASN diversity handling for ElectrumX's subnet-similarity anti-sybil filter; clearnet at M0–M1, Tor at M2.
+- *Discovery module.* Seed-list ingestion (1209k.com/bitcoin-eye + Electrum wallet hardcoded defaults); snowball expansion via `server.peers.subscribe`; ASN diversity handling for ElectrumX's subnet-similarity anti-sybil filter; **IPv4 + IPv6 dual-stack outbound required from M0 onwards** (clearnet); Tor at M2. Empirically validated in Phase-1: an IPv4-only host saw 246 reachable BTC mainnet servers, the same crawl from a dual-stack host saw 344 — the +98 delta is the bucket of IPv6-only / IPv6-preferred peers (≈28% of the network). IPv4-only deployments are not viable for the methodology.
 - *Collection module.* Asyncio-based persistent connection management to all discovered servers; subscriptions to `blockchain.headers.subscribe`; periodic polling of `server.version`, `server.features`, `server.banner`, `server.donation_address`, `server.ping`, `blockchain.estimatefee(n)`, `blockchain.relayfee`, `mempool.get_fee_histogram`. Reconnection with exponential backoff. Per-server uptime/downtime event logging.
 - *Storage module.* SQLite (M0) → TimescaleDB (M2). Append-only raw tier; derivable derived tier. Schema migrations forward-compatible-only.
 - *Analysis module.* Fork-race event ingestion from `bitcoin-data/stale-blocks`; per-pair pairwise-delta variance computation; multi-signal threshold evaluation; baseline similarity-distribution computation from known-independent servers; clustering (DBSCAN or hierarchical on weighted similarity matrix). Output: cluster assignments + per-pair signal breakdowns.
@@ -460,14 +471,14 @@ Code hash + raw-input fingerprint → bit-identical derived dataset, OR document
 **M0 → M1 → M2 → M3 → M4 transition gates.**
 
 - **M0 → M1 gate.** Asyncio collection running 24/7 against 10–20 seed servers; SQLite schema covering all data points in the architecture; M0 architectural guardrails enforced; reproducibility self-test green. No architectural shortcuts that would block M1 expansion.
-- **M1 → M2 gate.** Snowball expansion complete; clearnet network covered (~150–500 servers); SQLite scale stress-tested; planning for SQLite → TimescaleDB migration in place.
+- **M1 → M2 gate.** Snowball expansion complete; clearnet network covered (~150–500 servers, with empirical Phase-1 lower bound of 344 dual-stack-reachable mainnet servers); IPv6 reachability verified end-to-end (collector reaches IPv6-only servers in active probes, not just resolves AAAA records); SQLite scale stress-tested; planning for SQLite → TimescaleDB migration in place.
 - **M2 → M3 gate.** Tor coverage operational; TimescaleDB migration complete (or SQLite snapshot demonstrably sufficient for the M3 dataset window); 25-item launch-blocker checklist actively cleared; pre-launch empirical premise tests (launch-blockers #1, #2) green.
 - **M3 launch gate.** All five forced PRD sections satisfied and audited; tool + dataset + paper bit-identical-reproducible against the published code hash; three-tier archival operational (`bitcoin-data` PR accepted; Zenodo DOI cited in paper abstract; arXiv preprint timestamped). Launch-blocker checklist cleared.
 - **M3 → M4 gate.** Methodology paper accepted at FC/PETS/IMC OR published as technical report + arXiv + dataset DOI; first independent reproduction(s) landed; Phase 2 grant application in progress or secured.
 
 **Reuse posture.** `fork-observer` (b10c) for tip tracking integration; `bitcoin-data/stale-blocks` as canonical fork-race event source; `bitcoin-data` repository conventions for dataset publication; methodological-ancestor citations (CoinScope, TxProbe, Grundmann, Node-Probe) for related-work positioning. The project does not invent infrastructure where reusable infrastructure exists.
 
-**Pre-launch validation harness.** Fee-histogram-determinism test (launch-blocker #2) is a discrete validation tool, not a one-time check. Same harness exercised in CI to guard against methodology drift between releases.
+**Pre-launch validation harness.** Fee-histogram drift-magnitude calibration harness (launch-blocker #2) is a discrete validation tool, not a one-time check. Cross-instance bit-identity is false by construction (refresh phase offset, mempool-mirror drift, adaptive `bin_size *= 1.1` bucketing — see `docs/bmad-binnacle/03_phase1-validations.md`); the harness measures the 1-D Wasserstein distance distribution under known same-backend conditions to fix the cluster-membership threshold. Same harness exercised in CI to monitor methodology drift between releases.
 
 ## Project Scoping & Phased Development
 
@@ -475,7 +486,7 @@ Code hash + raw-input fingerprint → bit-identical derived dataset, OR document
 
 **MVP approach: reference-baseline research-contribution MVP.** The minimum shippable artifact is a citable empirical baseline — tool (apparatus) + dataset (primary product) + paper (primary product) shipped jointly at M3. "Useful" is defined by peer-researcher reproducibility and grant-committee fundability, not by end-user adoption. CLI ergonomics, packaging UX, and onboarding funnels are explicitly secondary (see §Tool Specification).
 
-**Resource requirements:** Solo researcher (Ifuensan / HackNodes Lab); sub-$500/year operational cost envelope (VPS + storage + redundancy); ~12-month M0→M3 execution window. Solo-researcher capacity is the architectural SPOF — pre-identified Path 2 candidate (b10c orbit / secondary academic measurement group) committed pre-launch as structural backstop.
+**Resource requirements:** Solo researcher (Ifuensan / HackNodes Lab); sub-$500/year operational cost envelope (VPS + storage + redundancy); ~12-month M0→M3 execution window. The chosen VPS provider must offer native IPv6 outbound (Hetzner CX22 ✓ by default; AWS supported with explicit VPC/subnet/ENI configuration; many low-cost VPS providers omit IPv6 — disqualifying for this project, see NFR10). Solo-researcher capacity is the architectural SPOF — pre-identified Path 2 candidate (b10c orbit / secondary academic measurement group) committed pre-launch as structural backstop.
 
 ### Phased Roadmap & Risk Mitigation
 
@@ -487,12 +498,12 @@ To avoid duplication and drift, phased roadmap and risk mitigation live in their
 - **Innovation-specific risk mitigations** (premise failure, parallel work, "discipline vs. discovery" framing, two-papers-as-hedging, multi-artifact bundling) → §Innovation & Novel Patterns > Risk Mitigation.
 - **Resource-risk contingency** (pre-committed anti-success triggers; Path 1 / Path 2 / Path 3 exits) → §Success Criteria > Grant / Program Success.
 
-### Launch-Blocker Checklist (25 items)
+### Launch-Blocker Checklist (26 items)
 
-The "25-item launch-blocker checklist" referenced throughout this PRD is enumerated here. Items 1–23 are imported verbatim from PRFAQ Stage 3 + Stage 4 coaching notes; items 24–25 promote two launch gates already present in the PRD body into numbered tracking items. No scope is introduced beyond what already exists in the document.
+The launch-blocker checklist referenced throughout this PRD is enumerated here. Items 1–23 are imported verbatim from PRFAQ Stage 3 + Stage 4 coaching notes; items 24–25 promote two launch gates already present in the PRD body into numbered tracking items; item 26 was added 2026-04-26 after Phase-1 V3 (snowball) empirically demonstrated ~28% of the network is IPv6-only. No scope is introduced beyond what already exists in the document.
 
 1. Verify `bitcoin-data/stale-blocks` cadence claim (3–8/month, 13 in first 3.5 months of 2026 with consecutive-height pairs).
-2. Empirically verify fee-histogram behavior on two ElectrumX frontends sharing one backend (identical vs. strongly correlated).
+2. Fee-histogram behavior — binary question closed 2026-04-25 by code reading (`spesmilo/electrumx/src/electrumx/server/mempool.py:154-209`): strongly correlated, not bit-identical, by construction. Pending: empirical drift-magnitude testbed against the 5-frontend matrix (ElectrumX × 2 + Fulcrum + mempool-electrs + Blockstream/electrs) over one Bitcoin Core to fix the cluster-membership Wasserstein threshold. Detail in `docs/bmad-binnacle/03_phase1-validations.md`.
 3. Verify 500 MB/month compressed signal volume at full public network scale — extrapolation from README's 20-server / 50–100 MB figure; run actual M0 test.
 4. Verify `$5/month VPS` claim against planned Rust daemon CPU profile.
 5. Verify "under an hour" Docker install claim when first-run guide exists.
@@ -505,8 +516,8 @@ The "25-item launch-blocker checklist" referenced throughout this PRD is enumera
 12. Pre-launch: create Zenodo record, reserve DOI, cite in paper abstract.
 13. Pre-launch: upload arXiv preprint citing Zenodo DOI.
 14. Pre-launch: verify AS24940 (Hetzner) as style-rule example remains representative; swap if Cluster 7 example is misleading.
-15. Verify Python asyncio timing resolution (~1–10 ms) is adequate in actual M0 collection.
-16. Verify 1209k.com "~90–95% of listed servers maintain >90% uptime" claim against actual 1209k.com historical data.
+15. ~~Verify Python asyncio timing resolution (~1–10 ms) is adequate in actual M0 collection.~~ **Cleared 2026-04-25.** Measured p99 fanout-broadcast spread = 587 µs at N=100, 1.71 ms at N=200 (both idle); ~3–8× under the 5 ms decision threshold. Methodology signal floor (hundreds of ms inter-server in fork races) dominates collector jitter by orders of magnitude. Detail in `experiments/asyncio-timing-benchmark/` and `docs/bmad-binnacle/03_phase1-validations.md`.
+16. Verify 1209k.com "~90–95% of listed servers maintain >90% uptime" claim against actual 1209k.com historical data. *(Deferred to M1 by Phase-1 scope decision: Phase-1 V3 measured the network independently and obtained ≥344 dual-stack-reachable mainnet servers vs. 1209k's headline of 506; cross-validation against 1209k rolled into M1 baseline calibration where it gates the discovery-source weighting in the snowball seed-list ingestion.)*
 17. Clarify and fact-check the I2P "reveals initiator's address" claim — phrase as "persistent destination identifiers enable long-term linkability" for technical accuracy.
 18. Verify IQ3's 9-month b10c-Todo dwell time is accurate at actual launch date; update phrasing if launch slips.
 19. **Critical-path pre-launch:** schedule b10c socialization conversation covering framing, `bitcoin-data` contribution, and Path 2 handoff optionality (IQ3 differentiation + IQ9 Path 2 precondition).
@@ -516,6 +527,7 @@ The "25-item launch-blocker checklist" referenced throughout this PRD is enumera
 23. Paper must include "threat model and known evasion paths" section per IQ7.
 24. **Output Guardrails phrasing-bank audit complete** across CLI output, dataset README, paper abstract, contribution-channel documentation, and Spanish translations. Audit is a launch gate; release blocked on completion. *(Promotion of §Output Guardrails > Pre-publication audit.)*
 25. **Reproducibility self-test green at M3 dataset snapshot** — code hash + raw-input fingerprint → bit-identical derived dataset (or per-column floating-point tolerance documented). Self-test invocation path documented in dataset README; reviewers can re-run independently. *(Promotion of §Reproducibility Contract + §Tool Specification ship gate.)*
+26. **VPS dual-stack verified** — operational gate that the M0/M1/M2 deploy host has IPv6 outbound functional before going live. Verification: from the deploy host, the collector successfully completes `server.features` + `server.peers.subscribe` against ≥3 IPv6-only Electrum servers in the discovered population. Failure mode prevented: silent ~28% network undercount (per Phase-1 V3 evidence). *(Promotion of §Tool Specification > Module structure > Discovery module + §Non-Functional > Scalability & Cost > NFR10 sub-bullet.)*
 
 **Priority-1 cluster** (per §Product Scope > MVP — M3 Launch): #11 (b10c socialization) → #2 (fee-histogram) → #8 (fork-observer) → #1 (stale-blocks cadence) → #9 (methodology-ancestor citations).
 
@@ -550,12 +562,12 @@ The "25-item launch-blocker checklist" referenced throughout this PRD is enumera
 
 - **FR17:** The system can ingest fork-race events from `bitcoin-data/stale-blocks` and identify the windowed time interval surrounding each event. — *owned by Analysis module*
 - **FR18:** The system can compute per-pair pairwise-delta variance for `blockchain.headers.subscribe` notifications across all observed servers within a fork-race window. — *owned by Analysis module*
-- **FR19:** The system can compute correlation scores for `mempool.get_fee_histogram` outputs across all server pairs over a configurable window. — *owned by Analysis module*
+- **FR19:** The system can compute the 1-D Wasserstein distance (Earth Mover's Distance, `∫ |F_A(x) − F_B(x)| dx` over fee-rate CDFs) between `mempool.get_fee_histogram` outputs across all server pairs over a configurable window. The Wasserstein metric is canonical because cross-instance bit-identity is false by construction (per §Implementation Considerations > Pre-launch validation harness). — *owned by Analysis module*
 - **FR20:** The system can detect synchronized downtime across server pairs and emit a synchronized-downtime signal. — *owned by Analysis module*
 - **FR21:** The system can evaluate the pre-committed multi-signal threshold (≥2 backend-state signals + ≥1 frontend-config signal) per cluster candidate and classify each as *finding*, *candidate-for-reproduction*, or *below-threshold*. — *owned by Analysis module*
 - **FR22:** The system can compute the known-independent baseline similarity distribution from a declared independent-server set, producing a noise-floor reference distribution. — *owned by Analysis module*
 - **FR23:** The system can produce cluster assignments via DBSCAN or hierarchical clustering on the weighted similarity matrix, with confidence intervals and multiple-testing correction applied. — *owned by Analysis module*
-- **FR24:** The system can run the fee-histogram-determinism diff harness against two ElectrumX frontends sharing one Bitcoin Core — both as one-time pre-launch validation and as a recurring CI check guarding methodology drift between releases. — *owned by Analysis module / CI tooling*
+- **FR24:** The system can run the fee-histogram drift-magnitude calibration harness against a multi-frontend matrix sharing one Bitcoin Core (ElectrumX × 2 + Fulcrum + mempool-electrs + Blockstream/electrs) — measuring the Wasserstein-distance distribution under same-backend conditions to fix the cluster-membership threshold. Used both as one-time pre-launch calibration and as a recurring CI check monitoring methodology drift between releases. — *owned by Analysis module / CI tooling*
 
 ### Dataset Publication & Archival
 
@@ -594,7 +606,7 @@ This section consolidates measurable quality attributes scattered across the PRD
 ### Performance
 
 - **NFR1 — Timing precision at capture.** Monotonic-ns clock at probe receipt; wall-clock recorded separately and never used in computed-delta metrics. NTP-disciplined host with declared stratum per collection window.
-- **NFR2 — Asyncio event-loop resolution.** Adequate for ~1–10 ms event handling at full-network scale (~150–500 concurrent connections). The methodology's signal floor (hundreds of ms between independent-backend pairs) is large compared to this measurement noise; tighter resolution is M4 Rust-rewrite territory, not M3.
+- **NFR2 — Asyncio event-loop resolution.** Adequate for sub-millisecond event handling at full-network scale (~150–500 concurrent connections). Empirically validated 2026-04-25: p99 fanout-broadcast spread = 587 µs at N=100, 1.71 ms at N=200 (per `experiments/asyncio-timing-benchmark/`). The methodology's signal floor (hundreds of ms between independent-backend pairs) is large compared to this measurement noise; tighter resolution is M4 Rust-rewrite territory, not M3.
 - **NFR3 — Cold-start time-to-first-probe.** ≤ 60 seconds from daemon launch to first successful `blockchain.headers.subscribe` notification ingestion at full-network scale.
 - **NFR4 — CI reproducibility self-test runtime.** ≤ 30 minutes for the bit-identical re-derivation pass on the M3 dataset window. If exceeded, sample-based verification with documented sampling parameters is the fallback.
 - **NFR5 — Snowball convergence bound.** ≤ 24 hours per discovery sweep, after which discovery is suspended and resumed in the next scheduled sweep. Prevents unbounded recursive expansion.
@@ -608,7 +620,7 @@ This section consolidates measurable quality attributes scattered across the PRD
 
 ### Scalability & Cost
 
-- **NFR10 — Concurrent-connection scale.** 100–500 heterogeneous TCP / SSL sockets sustained at full-network scale (clearnet at M0–M1; clearnet + Tor at M2+).
+- **NFR10 — Concurrent-connection scale.** 100–500 heterogeneous TCP / SSL sockets sustained at full-network scale (clearnet at M0–M1; clearnet + Tor at M2+). The deploy host must support **native IPv6 outbound** (Hetzner default; AWS requires explicit VPC + subnet IPv6 CIDR + ENI assignment + egress route via IGW or egress-only IGW). IPv6 tunnels (Hurricane Electric, ZeroTier-routed exits) are **not acceptable** for the timing methodology — they introduce a confounding latency hop that distorts the fork-race delta signal NFR1 depends on.
 - **NFR11 — Dataset-volume budget.** ~ 6 GB / year compressed at full-network scale. Compression algorithm and ratio documented per release manifest.
 - **NFR12 — Operational cost envelope.** ≤ $500 / year total (VPS + storage + redundancy + Zenodo deposit + arXiv hosting). Cost overage triggers IQ5-equivalent triage and a Path 2 / Path 3 readiness check.
 - **NFR13 — Memory footprint envelope.** ≤ 512 MB resident at the daemon process at full-network scale, leaving headroom for OS and supervision on $5 / month VPS-class hosts.

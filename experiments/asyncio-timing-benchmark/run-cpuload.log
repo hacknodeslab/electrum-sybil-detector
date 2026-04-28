@@ -1,0 +1,17 @@
+# host: darwin python=3.14.3  pid=66388  cpu_load=True
+# clock: time.monotonic_ns()  resolution=41.7ns
+
+== probe 1: naked scheduler tick (per-task delta around `await sleep(0)`) ==
+  N=  1 tasks                    n=   500  min=   425.4  p50=   466.9  p95=   495.0  p99=   515.8  max=    544.2  mean=   467.4  stdev=    15.5   (us)
+  N= 10 tasks                    n=  5000  min=   441.0  p50=   481.9  p95=   508.8  p99=   522.7  max=    537.9  mean=   481.8  stdev=    15.6   (us)
+  N= 50 tasks                    n= 25000  min=   467.0  p50=   524.0  p95=   553.8  p99=   570.2  max=    583.5  mean=   524.5  stdev=    18.4   (us)
+  N=100 tasks                    n= 50000  min=   493.1  p50=   554.0  p95=   584.1  p99=   592.0  max=    610.2  mean=   554.3  stdev=    18.8   (us)
+  N=200 tasks                    n=100000  min=   561.5  p50=   616.0  p95=   637.8  p99=   652.8  max=    669.3  mean=   615.6  stdev=    15.1   (us)
+
+== probe 2: fanout broadcast (Event.set -> spread of consumer wakeups) ==
+  N=  1 consumers, spread        n=   200  min=     0.0  p50=     0.0  p95=     0.0  p99=     0.0  max=      0.0  mean=     0.0  stdev=     0.0   (us)
+  N= 10 consumers, spread        n=   200  min=     4.4  p50=     6.3  p95=     7.8  p99=    16.8  max=     18.1  mean=     6.7  stdev=     1.6   (us)
+  N= 50 consumers, spread        n=   200  min=    21.7  p50=    31.7  p95=    36.6  p99=    63.1  max=     84.6  mean=    32.6  stdev=     5.2   (us)
+  N=100 consumers, spread        n=   200  min=    43.0  p50=    64.5  p95=    70.9  p99=   100.8  max=    103.0  mean=    65.3  stdev=     6.4   (us)
+  N=200 consumers, spread        n=   200  min=    87.6  p50=   128.5  p95=   143.0  p99=   178.1  max=    183.2  mean=   129.9  stdev=     9.5   (us)
+

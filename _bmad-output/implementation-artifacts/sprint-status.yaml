@@ -1,0 +1,120 @@
+# generated: 2026-04-27
+# last_updated: 2026-04-27
+# project: electrum-sybil-detector
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: _bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - Developer typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+
+generated: 2026-04-27
+last_updated: 2026-04-27
+project: electrum-sybil-detector
+project_key: NOKEY
+tracking_system: file-system
+story_location: _bmad-output/implementation-artifacts
+
+development_status:
+  # Epic 1: Reproducible Measurement Foundation on Production Host (M0)
+  epic-1: backlog
+  1-1-bespoke-m0-project-skeleton: backlog
+  1-2-dev-tooling-stack-uv-ruff-mypy-strict-pytest-pre-commit: backlog
+  1-3-github-actions-ci-baseline-matrix: backlog
+  1-4-core-utilities-time-discipline-hashing-exceptions-structured-logging: backlog
+  1-5-sqlite-wal-storage-backend-initial-schema-forward-only-migration-runner: backlog
+  1-6-seed-list-ingestion-discovery-m0: backlog
+  1-7-connect-to-one-electrum-server-end-to-end: backlog
+  1-8-persistent-multi-server-connection-pool-with-reconnect-rate-limit-lifecycle-events: backlog
+  1-9-reproducibility-self-test-scaffold-ci-gate: backlog
+  1-10-aws-production-deploy-via-terraform-chrony-systemd-ipv6-dual-stack-gate: backlog
+  1-11-m0-m1-gate-verification-per-window-ntp-manifest-persistence: backlog
+  epic-1-retrospective: optional
+
+  # Epic 2: Full-Network Discovery & Sustained Collection (M1 → M2)
+  epic-2: backlog
+  2-1-snowball-discovery-via-server-peers-subscribe: backlog
+  2-2-discovery-provenance-enrichment-asn-protocol-version-range: backlog
+  2-3-periodic-stable-rpc-polling-suite-at-full-network-scale: backlog
+  2-4-collection-gap-enumeration: backlog
+  2-5-m1-m2-gate-verification-full-network-reach-ipv6-only-end-to-end-14-day-soak: backlog
+  2-6-tor-socks5-transport-plug-in-onion-reach: backlog
+  2-7-timescaledb-backend-storage-backend-swap: backlog
+  2-8-90-day-downsampling-retention-policy: backlog
+  2-9-m2-m3-gate-verification-tor-coverage-storage-migration-lb-readiness: backlog
+  epic-2-retrospective: optional
+
+  # Epic 3: Methodology Signal Computation & Cluster Findings (M3 entry)
+  epic-3: backlog
+  3-1-fee-histogram-drift-calibration-harness-5-frontend-matrix-lb2: backlog
+  3-2-derived-tier-scaffolding-derived-run-id-frozen-thresholds-yaml-statistical-rigor-utilities: backlog
+  3-3-fork-race-event-ingestion-from-bitcoin-data-stale-blocks-fork-observer-cross-check: backlog
+  3-4-per-pair-pairwise-delta-variance-over-fork-race-windows: backlog
+  3-5-1-d-wasserstein-distance-over-fee-rate-cdfs: backlog
+  3-6-synchronized-downtime-detection-via-interval-overlap: backlog
+  3-7-baseline-noise-floor-distribution-from-declared-independent-server-set: backlog
+  3-8-multi-signal-threshold-engine-frozen-rule-classification: backlog
+  3-9-dbscan-ward-clustering-with-bh-fdr-bootstrap-cis-power-analysis: backlog
+  3-10-m3-analysis-pipeline-ship-readiness-gate: backlog
+  epic-3-retrospective: optional
+
+  # Epic 4: Citable Dataset Bundle Publication (M3 launch)
+  epic-4: backlog
+  4-1-parquet-snapshot-generator-tier-1-bitcoin-data-github-conventions: backlog
+  4-2-manifest-json-builder: backlog
+  4-3-bit-identical-re-derivation-ship-gate-full-nfr15-contract-at-m3-dataset-scale: backlog
+  4-4-tier-2-archival-bitcoin-data-github-pr-via-gh-cli-idempotent: backlog
+  4-5-tier-2-archival-zenodo-doi-minting-via-rest-api-idempotent: backlog
+  4-6-tier-3-archival-arxiv-preprint-upload-helper-latex-source-bundle: backlog
+  4-7-m3-launch-ship-gate-26-item-lb-checklist-final-pass-three-tier-archival-operational-cross-epic-readiness: backlog
+  epic-4-retrospective: optional
+
+  # Epic 5: Output Guardrails & Flagged-Operator Disclosure (M0 audit gate → M3 disclosure flow)
+  epic-5: backlog
+  5-1-phrasing-bank-yaml-schema-regex-rule-engine-audit-runner: backlog
+  5-2-audit-ci-gate-release-blocking-enforcement-across-cli-strings-dataset-readme-paper-abstract-spanish-mirrors: backlog
+  5-3-what-a-flagged-cluster-does-not-mean-explanatory-text-dataset-readme-paper-sections: backlog
+  5-4-flagged-operator-disclosure-issue-template-48h-sla-acknowledgment-workflow: backlog
+  5-5-operator-contextual-note-appending-workflow-with-consent-capture: backlog
+  epic-5-retrospective: optional
+
+  # Epic 6: Bilingual EN+ES Parity (M0 scaffold → ongoing SLA)
+  epic-6: backlog
+  6-1-bilingual-scaffold-readme-first-run-guide-schema-docs-contribution-guide-cli-help-in-en-es-at-parity: backlog
+  6-2-bilingual-issue-pr-templates-with-same-sla-acknowledgment-workflow: backlog
+  6-3-bilingual-staleness-ci-14d-warn-30d-release-blocking-gate: backlog
+  6-4-stale-translation-rollback-workflow-30d-hard-sla-enforcement: backlog
+  epic-6-retrospective: optional
+
+  # Epic 7: Operational Stewardship — Uptime, SLAs, Launch-Blocker Tracking
+  epic-7: backlog
+  7-1-rolling-30-day-uptime-monitoring-95-threshold-alerting-planned-downtime-accounting: backlog
+  7-2-pr-review-sla-tracker-review-queued-tagging-during-peak-load: backlog
+  7-3-26-item-launch-blocker-checklist-tracker-docs-launch-blockers-yaml-priority-1-cluster-surfacing: backlog
+  epic-7-retrospective: optional

@@ -1,0 +1,26 @@
+loaded 79 clearnet bootstrap hosts from bootstrap.json
+concurrency=50 connect_timeout=8.0s read_timeout=8.0s max_hosts=2000
+wrote discovered.json (394 host records)
+
+======================================================================
+snowball complete in 63.5s
+seed (bootstrap clearnet): 79
+hosts probed total       : 394
+reachable (status=ok)    : 344
+  └─ btc mainnet         : 344
+.onion peers seen (not probed): 43
+
+status breakdown:
+  ok           344
+  net-error    25
+  timeout      25
+
+genesis_hash breakdown (reachable only):
+  000000000019d6689c085ae165831e93…   344 <- BTC mainnet
+
+mainnet reachable hosts by discovery source:
+  peer-discovered      309
+  bootstrap            35
+
+latency (s): min=0.02 p50=0.74 p95=30.70 max=31.77
+======================================================================
