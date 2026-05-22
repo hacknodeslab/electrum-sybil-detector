@@ -1,9 +1,13 @@
 # Project Brief — electrum-sybil-detector
 
-**Tipo / Format:** 2-pager (Amazon-style strategic narrative memo) · **Audiencia / Audience:** grant reviewers + Bitcoin-research peers
-**Fecha / Date:** 2026-04-23 · **Autor / Author:** Ifuensan (HackNodes Lab · Librería de Satoshi)
+* **Tipo / Format:** 2-pager (Amazon-style strategic narrative memo) · 
+* **Audiencia / Audience:** grant reviewers + Bitcoin-research peers
+* **Fecha / Date:** 2026-04-23 · 
+* **Autor / Author:** Ifuensan (HackNodes Lab · Librería de Satoshi)
 
 ---
+
+> 🌐 [English version](#-english-version)
 
 ### Apertura
 
