@@ -1,10 +1,10 @@
 # Electrum Server Sybil Detector
 
-  **Project:** `electrum-sybil-detector`
-  **Lab:** HackNodes Lab
-  **Status:** Draft (research output — tool → dataset → paper)
-  **Author:** ifuensan
-  **Date:** 2026-04-10
+* **Project:** `electrum-sybil-detector`
+* **Lab:** HackNodes Lab
+* **Status:** Draft (research output — tool → dataset → paper)
+* **Author:** ifuensan
+* **Date:** 2026-04-10
 
 ## Problem Statement
 
